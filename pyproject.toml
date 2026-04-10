@@ -45,10 +45,10 @@ all = ["tokonomics[tiktoken,cli]"]
 tokonomics = "tokonomics.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/zbhatti/tokonomics"
-Repository = "https://github.com/zbhatti/tokonomics"
-Issues = "https://github.com/zbhatti/tokonomics/issues"
-Documentation = "https://github.com/zbhatti/tokonomics#readme"
+Homepage = "https://github.com/stef41/tokonomics"
+Repository = "https://github.com/stef41/tokonomics"
+Issues = "https://github.com/stef41/tokonomics/issues"
+Documentation = "https://github.com/stef41/tokonomics#readme"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/tokonomics"]

@@ -1,8 +1,16 @@
 # tokonomics
 
+[![CI](https://github.com/stef41/tokonomics/actions/workflows/ci.yml/badge.svg)](https://github.com/stef41/tokonomics/actions/workflows/ci.yml)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
+
 **Know what your LLM calls actually cost.**
 
 tokonomics is a lightweight Python library for token counting and cost management across every major LLM provider. It replaces guesswork with exact numbers — so you can track spending, set budgets, and compare providers before committing to a model.
+
+<p align="center">
+  <img src="assets/cost_comparison.svg" width="720" alt="tokonomics cost comparison" />
+</p>
 
 ```python
 from tokonomics import estimate_cost, calculate_cost, compare_models
