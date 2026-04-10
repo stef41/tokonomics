@@ -10,6 +10,7 @@ from tokonomics._types import (
     UsageRecord,
 )
 from tokonomics.budget import Budget
+from tokonomics.charts import export_svg_chart, format_bar_chart, format_table
 from tokonomics.compare import cheapest_model, compare_models, format_comparison
 from tokonomics.cost import calculate_cost, cost_per_token, estimate_cost
 from tokonomics.models import find_models, get_model, list_models
@@ -52,4 +53,8 @@ __all__ = [
     "compare_models",
     "cheapest_model",
     "format_comparison",
+    # Charts
+    "format_bar_chart",
+    "export_svg_chart",
+    "format_table",
 ]
