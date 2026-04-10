@@ -4,10 +4,10 @@ Requires the ``cli`` extra: ``pip install tokonomics[cli]``
 """
 
 from __future__ import annotations
-from typing import Any
 
 import sys
 from pathlib import Path
+from typing import Any
 
 try:
     import click
