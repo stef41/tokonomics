@@ -14,6 +14,12 @@ from tokonomics.charts import export_svg_chart, format_bar_chart, format_table
 from tokonomics.compare import cheapest_model, compare_models, format_comparison
 from tokonomics.cost import calculate_cost, cost_per_token, estimate_cost
 from tokonomics.models import find_models, get_model, list_models
+from tokonomics.streaming import (
+    StreamingCostTracker,
+    StreamingUsage,
+    async_track_stream,
+    track_stream,
+)
 from tokonomics.tokenizer import count_message_tokens, count_tokens, fits_context
 from tokonomics.tracker import CostTracker, get_global_tracker, track_cost
 
@@ -47,6 +53,11 @@ __all__ = [
     "track_cost",
     "CostTracker",
     "get_global_tracker",
+    # Streaming
+    "StreamingCostTracker",
+    "StreamingUsage",
+    "async_track_stream",
+    "track_stream",
     # Budget
     "Budget",
     # Comparison
