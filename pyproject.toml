@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tokonomics"
-version = "0.1.0"
+version = "0.2.0"
 description = "Universal LLM token counting and cost management. Track, compare, and optimize your LLM API spending."
 readme = "README.md"
 license = {text = "Apache-2.0"}

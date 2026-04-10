@@ -23,7 +23,7 @@ from tokonomics.streaming import (
 from tokonomics.tokenizer import count_message_tokens, count_tokens, fits_context
 from tokonomics.tracker import CostTracker, get_global_tracker, track_cost
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     # Version
