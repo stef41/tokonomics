@@ -4,8 +4,8 @@ from decimal import Decimal
 
 import pytest
 
-from tokonomics.compare import compare_models, cheapest_model, format_comparison
 from tokonomics._types import Provider
+from tokonomics.compare import cheapest_model, compare_models, format_comparison
 
 
 class TestCompareModels:

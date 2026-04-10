@@ -3,9 +3,7 @@
 import asyncio
 from decimal import Decimal
 
-import pytest
-
-from tokonomics.tracker import CostTracker, track_cost, get_global_tracker
+from tokonomics.tracker import CostTracker, get_global_tracker, track_cost
 
 
 class TestCostTracker:

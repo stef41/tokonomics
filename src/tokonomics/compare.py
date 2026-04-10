@@ -3,18 +3,20 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any
 
-from tokonomics._types import ModelPricing, Provider
-from tokonomics.models import list_models, get_model
+from tokonomics.models import get_model, list_models
 from tokonomics.tokenizer import count_tokens
+
+if TYPE_CHECKING:
+    from tokonomics._types import ModelPricing, Provider
 
 
 def compare_models(
     text: str,
-    models: Optional[List[str]] = None,
+    models: list[str] | None = None,
     output_tokens: int = 500,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """Compare cost of sending *text* to different models.
 
     Parameters
@@ -33,10 +35,7 @@ def compare_models(
         ``input_tokens``, ``input_cost``, ``output_cost``, ``total_cost``,
         and ``context_window``.
     """
-    if models is not None:
-        pricing_list = [get_model(m) for m in models]
-    else:
-        pricing_list = list_models()
+    pricing_list = [get_model(m) for m in models] if models is not None else list_models()
 
     results: list[dict[str, Any]] = []
     for pricing in pricing_list:
@@ -73,7 +72,7 @@ def compare_models(
 
 def cheapest_model(
     text: str,
-    providers: Optional[List[Provider]] = None,
+    providers: list[Provider] | None = None,
     min_context_window: int = 0,
     output_tokens: int = 500,
 ) -> ModelPricing:
@@ -113,8 +112,8 @@ def cheapest_model(
         if not (m.output_per_million == 0 and "embed" in m.model_id.lower())
     ]
 
-    best: Optional[ModelPricing] = None
-    best_cost: Optional[Decimal] = None
+    best: ModelPricing | None = None
+    best_cost: Decimal | None = None
 
     for model in candidates:
         input_tok = count_tokens(text, model.model_id)
@@ -134,7 +133,7 @@ def cheapest_model(
     return best
 
 
-def format_comparison(results: List[Dict[str, Any]], top_n: int = 0) -> str:
+def format_comparison(results: list[dict[str, Any]], top_n: int = 0) -> str:
     """Format comparison results as a readable table.
 
     Parameters

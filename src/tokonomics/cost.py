@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import Tuple
 
 from tokonomics._types import CostEstimate, UsageRecord
 from tokonomics.models import get_model
@@ -81,7 +80,7 @@ def calculate_cost(
     )
 
 
-def cost_per_token(model: str) -> Tuple[Decimal, Decimal]:
+def cost_per_token(model: str) -> tuple[Decimal, Decimal]:
     """Return ``(input_cost_per_token, output_cost_per_token)`` for *model*."""
     pricing = get_model(model)
     return pricing.input_per_token, pricing.output_per_token

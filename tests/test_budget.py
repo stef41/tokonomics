@@ -4,8 +4,8 @@ from decimal import Decimal
 
 import pytest
 
-from tokonomics.budget import Budget
 from tokonomics._types import BudgetExceededError
+from tokonomics.budget import Budget
 
 
 class TestBudget:

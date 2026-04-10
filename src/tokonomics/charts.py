@@ -5,7 +5,7 @@ from __future__ import annotations
 import html
 from decimal import Decimal
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 # Unicode block characters for bar rendering (1/8 to full block)
 _BLOCKS = " ▏▎▍▌▋▊▉█"
@@ -25,7 +25,7 @@ _PASTEL_COLORS = [
 ]
 
 
-def _extract_metric(row: Dict[str, Any], metric: str) -> float:
+def _extract_metric(row: dict[str, Any], metric: str) -> float:
     """Pull a numeric value from a comparison row by metric name."""
     key_map = {
         "cost": "total_cost",
@@ -43,9 +43,9 @@ def _extract_metric(row: Dict[str, Any], metric: str) -> float:
     return float(val)
 
 
-def _label_for(row: Dict[str, Any]) -> str:
-    model = row.get("model", "unknown")
-    provider = row.get("provider", "")
+def _label_for(row: dict[str, Any]) -> str:
+    model = str(row.get("model", "unknown"))
+    provider = str(row.get("provider", ""))
     if provider:
         return f"{model} ({provider})"
     return model
@@ -63,7 +63,7 @@ def _format_value(value: float, metric: str) -> str:
 
 
 def format_bar_chart(
-    comparisons: List[Dict[str, Any]],
+    comparisons: list[dict[str, Any]],
     metric: str = "cost",
     width: int = 40,
 ) -> str:
@@ -95,10 +95,7 @@ def format_bar_chart(
 
     lines: list[str] = []
     for label, val in zip(labels, values):
-        if max_val > 0:
-            ratio = val / max_val
-        else:
-            ratio = 0.0
+        ratio = val / max_val if max_val > 0 else 0.0
 
         full_blocks = int(ratio * width)
         remainder = (ratio * width) - full_blocks
@@ -120,12 +117,12 @@ def format_bar_chart(
 
 
 def export_svg_chart(
-    comparisons: List[Dict[str, Any]],
+    comparisons: list[dict[str, Any]],
     metric: str = "cost",
-    path: Optional[Union[str, Path]] = None,
+    path: str | Path | None = None,
     bar_height: int = 28,
     max_bar_width: int = 400,
-    title: Optional[str] = None,
+    title: str | None = None,
 ) -> str:
     """Generate an SVG horizontal bar chart and optionally save it to a file.
 
@@ -236,7 +233,7 @@ def export_svg_chart(
 # ---------------------------------------------------------------------------
 
 
-def format_table(comparisons: List[Dict[str, Any]]) -> str:
+def format_table(comparisons: list[dict[str, Any]]) -> str:
     """Return a formatted ASCII table of cost comparison results.
 
     Columns: Model, Provider, Input Cost, Output Cost, Total Cost.

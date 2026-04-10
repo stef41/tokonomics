@@ -1,10 +1,11 @@
 """Tests for cost calculation."""
 
-import pytest
 from decimal import Decimal
 
-from tokonomics.cost import estimate_cost, calculate_cost, cost_per_token
+import pytest
+
 from tokonomics._types import Provider
+from tokonomics.cost import calculate_cost, cost_per_token, estimate_cost
 
 
 class TestEstimateCost:

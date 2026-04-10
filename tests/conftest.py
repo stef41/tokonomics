@@ -1,7 +1,5 @@
 import pytest
 
-from tokonomics._types import Provider
-
 
 @pytest.fixture
 def sample_text():

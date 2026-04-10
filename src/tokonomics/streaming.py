@@ -5,9 +5,12 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import Any, AsyncIterator, Dict, Iterator, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from tokonomics.models import get_model
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncIterator, Iterator
 
 T = TypeVar("T")
 
@@ -45,7 +48,7 @@ class StreamingCostTracker:
         if token_text:
             self._token_count += 1
 
-    def on_chunk(self, chunk_dict: Dict[str, Any]) -> None:
+    def on_chunk(self, chunk_dict: dict[str, Any]) -> None:
         """Called with a raw OpenAI-style streaming chunk dict.
 
         Extracts delta content and counts it as one token if present.
@@ -88,7 +91,7 @@ class _TrackedAsyncStream:
         self._it = async_iterator
         self.tracker = tracker
 
-    def __aiter__(self) -> "_TrackedAsyncStream":
+    def __aiter__(self) -> _TrackedAsyncStream:
         return self
 
     async def __anext__(self) -> Any:
@@ -114,7 +117,7 @@ class _TrackedSyncStream:
         self._it = iterator
         self.tracker = tracker
 
-    def __iter__(self) -> "_TrackedSyncStream":
+    def __iter__(self) -> _TrackedSyncStream:
         return self
 
     def __next__(self) -> Any:
@@ -134,7 +137,7 @@ class _TrackedSyncStream:
 def async_track_stream(
     async_iterator: AsyncIterator[T],
     model: str = "gpt-4o",
-    tracker: Optional[StreamingCostTracker] = None,
+    tracker: StreamingCostTracker | None = None,
 ) -> _TrackedAsyncStream:
     """Wrap an async iterator to track streaming cost.
 
@@ -158,7 +161,7 @@ def async_track_stream(
 def track_stream(
     iterator: Iterator[T],
     model: str = "gpt-4o",
-    tracker: Optional[StreamingCostTracker] = None,
+    tracker: StreamingCostTracker | None = None,
 ) -> _TrackedSyncStream:
     """Wrap an iterator to track streaming cost.
 

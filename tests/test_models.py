@@ -1,15 +1,16 @@
 """Tests for the model registry."""
 
-import pytest
 from decimal import Decimal
 
+import pytest
+
+from tokonomics._types import ModelNotFoundError, Provider
 from tokonomics.models import (
+    MODEL_REGISTRY,
+    find_models,
     get_model,
     list_models,
-    find_models,
-    MODEL_REGISTRY,
 )
-from tokonomics._types import ModelNotFoundError, ModelPricing, Provider
 
 
 class TestGetModel:

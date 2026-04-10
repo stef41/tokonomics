@@ -1,6 +1,5 @@
 """Tests for streaming cost tracking."""
 
-import asyncio
 from decimal import Decimal
 
 import pytest
@@ -11,7 +10,6 @@ from tokonomics.streaming import (
     async_track_stream,
     track_stream,
 )
-
 
 # ---------------------------------------------------------------------------
 # StreamingCostTracker

@@ -5,7 +5,7 @@ from __future__ import annotations
 import threading
 import time
 from decimal import Decimal
-from typing import Callable, List, Optional, Tuple
+from typing import Callable
 
 from tokonomics._types import BudgetExceededError
 
@@ -51,7 +51,7 @@ class Budget:
         self._used = Decimal("0")
         self._period_start = time.monotonic()
         self._lock = threading.Lock()
-        self._thresholds: List[Tuple[Decimal, Callable[["Budget"], None]]] = []
+        self._thresholds: list[tuple[Decimal, Callable[[Budget], None]]] = []
         self._triggered: set[int] = set()
 
     @property
@@ -104,7 +104,7 @@ class Budget:
     def record(self, cost: float | Decimal) -> None:
         """Record a cost.  Raises :class:`BudgetExceededError` if the budget is blown."""
         cost_d = Decimal(str(cost))
-        callbacks_to_fire: list[Callable[["Budget"], None]] = []
+        callbacks_to_fire: list[Callable[[Budget], None]] = []
 
         with self._lock:
             self._maybe_reset()
@@ -130,7 +130,7 @@ class Budget:
     def on_threshold(
         self,
         pct: float,
-        callback: Callable[["Budget"], None],
+        callback: Callable[[Budget], None],
     ) -> None:
         """Register *callback* to fire when spending reaches *pct* (0.0–1.0)."""
         with self._lock:

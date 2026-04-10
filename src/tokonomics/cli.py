@@ -4,10 +4,10 @@ Requires the ``cli`` extra: ``pip install tokonomics[cli]``
 """
 
 from __future__ import annotations
+from typing import Any
 
 import sys
 from pathlib import Path
-from typing import Optional
 
 try:
     import click
@@ -35,18 +35,18 @@ def _read_input(text: str) -> str:
     return text
 
 
-def _build_cli():  # type: ignore[no-untyped-def]
+def _build_cli() -> Any:
     if not _HAS_CLICK:
         return None
 
-    from tokonomics.compare import compare_models as _compare_models
+    from tokonomics._types import ModelNotFoundError, Provider
     from tokonomics.compare import cheapest_model as _cheapest_model
+    from tokonomics.compare import compare_models as _compare_models
     from tokonomics.compare import format_comparison as _format_comparison
     from tokonomics.cost import estimate_cost as _estimate_cost
-    from tokonomics.models import list_models as _list_models
-    from tokonomics.models import get_model as _get_model
     from tokonomics.models import find_models as _find_models
-    from tokonomics._types import Provider, ModelNotFoundError
+    from tokonomics.models import get_model as _get_model
+    from tokonomics.models import list_models as _list_models
 
     @click.group()
     @click.version_option(package_name="tokonomics")
@@ -90,7 +90,7 @@ def _build_cli():  # type: ignore[no-untyped-def]
     @click.option("-o", "--output-tokens", default=500, type=int, help="Assumed output tokens.")
     @click.option("-p", "--providers", default=None, help="Comma-separated provider filter.")
     @click.option("-n", "--top", default=10, type=int, help="Show top N cheapest.")
-    def compare(text: str, output_tokens: int, providers: Optional[str], top: int) -> None:
+    def compare(text: str, output_tokens: int, providers: str | None, top: int) -> None:
         """Compare cost across models."""
         text = _read_input(text)
         results = _compare_models(text, output_tokens=output_tokens)
@@ -123,7 +123,7 @@ def _build_cli():  # type: ignore[no-untyped-def]
 
     @cli.command(name="models")
     @click.option("-p", "--provider", default=None, help="Filter by provider name.")
-    def list_models_cmd(provider: Optional[str]) -> None:
+    def list_models_cmd(provider: str | None) -> None:
         """List all supported models and their pricing."""
         prov = None
         if provider:
@@ -205,7 +205,7 @@ def _build_cli():  # type: ignore[no-untyped-def]
     @click.option("-p", "--providers", default=None, help="Comma-separated provider filter.")
     @click.option("-c", "--min-context", default=0, type=int, help="Min context window.")
     @click.option("-o", "--output-tokens", default=500, type=int, help="Assumed output tokens.")
-    def cheapest(text: str, providers: Optional[str], min_context: int, output_tokens: int) -> None:
+    def cheapest(text: str, providers: str | None, min_context: int, output_tokens: int) -> None:
         """Find the cheapest model for the given input."""
         text = _read_input(text)
         prov_list = None

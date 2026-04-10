@@ -6,12 +6,12 @@ import sys
 from dataclasses import dataclass, field
 from decimal import Decimal
 from enum import Enum
-from typing import Any, Optional, Tuple
+from typing import Any
 
 if sys.version_info >= (3, 11):
     from enum import StrEnum as _StrEnumBase
 else:
-    class _StrEnumBase(str, Enum):  # type: ignore[no-redef]
+    class _StrEnumBase(str, Enum):
         pass
 
 
@@ -39,20 +39,20 @@ class ModelPricing:
     input_per_million: Decimal
     output_per_million: Decimal
     context_window: int
-    max_output_tokens: Optional[int] = None
+    max_output_tokens: int | None = None
 
     # Cached input pricing (some providers offer discounts for prompt caching)
-    cached_input_per_million: Optional[Decimal] = None
+    cached_input_per_million: Decimal | None = None
 
     # Batch API pricing
-    batch_input_per_million: Optional[Decimal] = None
-    batch_output_per_million: Optional[Decimal] = None
+    batch_input_per_million: Decimal | None = None
+    batch_output_per_million: Decimal | None = None
 
     # Reasoning / thinking token pricing (o-series, DeepSeek-R1, etc.)
-    thinking_output_per_million: Optional[Decimal] = None
+    thinking_output_per_million: Decimal | None = None
 
     # Model aliases (e.g. "gpt-4o" -> "gpt-4o-2024-08-06")
-    aliases: Tuple[str, ...] = ()
+    aliases: tuple[str, ...] = ()
 
     @property
     def input_per_token(self) -> Decimal:
@@ -108,7 +108,7 @@ class UsageRecord:
     total_cost: Decimal
     cached_tokens: int = 0
     thinking_tokens: int = 0
-    timestamp: Optional[float] = None
+    timestamp: float | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
 
@@ -121,8 +121,8 @@ class CostEstimate:
     estimated_input_tokens: int
     estimated_input_cost: Decimal
     context_window: int
-    max_output_tokens: Optional[int] = None
-    estimated_max_output_cost: Optional[Decimal] = None
+    max_output_tokens: int | None = None
+    estimated_max_output_cost: Decimal | None = None
 
 
 class TokonomicsError(Exception):

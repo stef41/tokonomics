@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import json
 import time
-from dataclasses import dataclass, field
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Any
 
 
 @dataclass
@@ -22,8 +22,8 @@ class UsageEntry:
 class UsageReport:
     """Accumulates usage entries and produces time-based summaries."""
 
-    def __init__(self, entries: Optional[List[UsageEntry]] = None) -> None:
-        self._entries: List[UsageEntry] = list(entries) if entries else []
+    def __init__(self, entries: list[UsageEntry] | None = None) -> None:
+        self._entries: list[UsageEntry] = list(entries) if entries else []
 
     # -- mutating -----------------------------------------------------------
 
@@ -32,7 +32,7 @@ class UsageReport:
         model: str,
         tokens: int,
         cost: float,
-        timestamp: Optional[float] = None,
+        timestamp: float | None = None,
     ) -> UsageEntry:
         """Add a usage entry and return it."""
         entry = UsageEntry(
@@ -55,28 +55,28 @@ class UsageReport:
         return sum(e.tokens for e in self._entries)
 
     @property
-    def entries(self) -> List[UsageEntry]:
+    def entries(self) -> list[UsageEntry]:
         return list(self._entries)
 
     # -- summaries ----------------------------------------------------------
 
-    def daily_summary(self) -> Dict[str, Dict[str, Any]]:
+    def daily_summary(self) -> dict[str, dict[str, Any]]:
         """Aggregate entries by calendar date (YYYY-MM-DD)."""
         return self._summarise_by_key(lambda ts: datetime.fromtimestamp(ts).strftime("%Y-%m-%d"))
 
-    def weekly_summary(self) -> Dict[str, Dict[str, Any]]:
+    def weekly_summary(self) -> dict[str, dict[str, Any]]:
         """Aggregate entries by ISO week (YYYY-WNN)."""
         return self._summarise_by_key(
             lambda ts: datetime.fromtimestamp(ts).strftime("%Y-W%W")
         )
 
-    def monthly_summary(self) -> Dict[str, Dict[str, Any]]:
+    def monthly_summary(self) -> dict[str, dict[str, Any]]:
         """Aggregate entries by month (YYYY-MM)."""
         return self._summarise_by_key(lambda ts: datetime.fromtimestamp(ts).strftime("%Y-%m"))
 
-    def by_model(self) -> Dict[str, Dict[str, Any]]:
+    def by_model(self) -> dict[str, dict[str, Any]]:
         """Aggregate entries by model name."""
-        buckets: Dict[str, Dict[str, Any]] = {}
+        buckets: dict[str, dict[str, Any]] = {}
         for entry in self._entries:
             key = entry.model
             if key not in buckets:
@@ -88,8 +88,8 @@ class UsageReport:
 
     # -- helpers ------------------------------------------------------------
 
-    def _summarise_by_key(self, key_fn: Any) -> Dict[str, Dict[str, Any]]:
-        buckets: Dict[str, Dict[str, Any]] = {}
+    def _summarise_by_key(self, key_fn: Any) -> dict[str, dict[str, Any]]:
+        buckets: dict[str, dict[str, Any]] = {}
         for entry in self._entries:
             key = key_fn(entry.timestamp)
             if key not in buckets:
@@ -118,7 +118,7 @@ def format_usage_report(report: UsageReport, period: str = "daily") -> str:
         raise ValueError(f"Unknown period {period!r}; expected 'daily', 'weekly', or 'monthly'")
 
     data = summaries[period]()
-    lines: List[str] = [f"Usage Report ({period})", "=" * 40]
+    lines: list[str] = [f"Usage Report ({period})", "=" * 40]
     for key in sorted(data):
         bucket = data[key]
         lines.append(

@@ -5,7 +5,7 @@ import pytest
 
 @pytest.fixture
 def cli_runner():
-    click = pytest.importorskip("click")
+    pytest.importorskip("click")
     from click.testing import CliRunner
     return CliRunner()
 

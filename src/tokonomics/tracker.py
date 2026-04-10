@@ -7,10 +7,12 @@ import functools
 import threading
 import time
 from decimal import Decimal
-from typing import Any, Callable, Dict, List, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, TypeVar
 
-from tokonomics._types import UsageRecord
 from tokonomics.cost import calculate_cost
+
+if TYPE_CHECKING:
+    from tokonomics._types import UsageRecord
 
 F = TypeVar("F", bound=Callable[..., Any])
 
@@ -28,10 +30,10 @@ class CostTracker:
     """
 
     def __init__(self) -> None:
-        self._records: List[UsageRecord] = []
+        self._records: list[UsageRecord] = []
         self._lock = threading.Lock()
 
-    def __enter__(self) -> "CostTracker":
+    def __enter__(self) -> CostTracker:
         return self
 
     def __exit__(self, *args: Any) -> None:
@@ -44,7 +46,7 @@ class CostTracker:
         output_tokens: int,
         cached_tokens: int = 0,
         thinking_tokens: int = 0,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: dict[str, Any] | None = None,
     ) -> UsageRecord:
         """Record a single API call's usage."""
         usage = calculate_cost(
@@ -62,7 +64,7 @@ class CostTracker:
         return usage
 
     @property
-    def records(self) -> List[UsageRecord]:
+    def records(self) -> list[UsageRecord]:
         """All recorded usage entries."""
         with self._lock:
             return list(self._records)
@@ -83,17 +85,17 @@ class CostTracker:
         with self._lock:
             return sum(r.output_tokens for r in self._records)
 
-    def by_model(self) -> Dict[str, Decimal]:
+    def by_model(self) -> dict[str, Decimal]:
         """Cost breakdown grouped by model."""
-        result: Dict[str, Decimal] = {}
+        result: dict[str, Decimal] = {}
         with self._lock:
             for r in self._records:
                 result[r.model] = result.get(r.model, Decimal("0")) + r.total_cost
         return dict(sorted(result.items(), key=lambda kv: kv[1], reverse=True))
 
-    def by_provider(self) -> Dict[str, Decimal]:
+    def by_provider(self) -> dict[str, Decimal]:
         """Cost breakdown grouped by provider."""
-        result: Dict[str, Decimal] = {}
+        result: dict[str, Decimal] = {}
         with self._lock:
             for r in self._records:
                 key = r.provider.value
@@ -132,7 +134,7 @@ def get_global_tracker() -> CostTracker:
 
 def track_cost(
     model: str,
-    tracker: Optional[CostTracker] = None,
+    tracker: CostTracker | None = None,
     input_tokens_key: str = "input_tokens",
     output_tokens_key: str = "output_tokens",
 ) -> Callable[[F], F]:
@@ -160,8 +162,8 @@ def track_cost(
     target_tracker = tracker or _global_tracker
 
     def decorator(fn: F) -> F:
-        _usage_history: List[UsageRecord] = []
-        _last_usage: List[Optional[UsageRecord]] = [None]
+        _usage_history: list[UsageRecord] = []
+        _last_usage: list[UsageRecord | None] = [None]
 
         def _extract_tokens(result: Any) -> tuple[int, int]:
             if isinstance(result, dict):
@@ -207,12 +209,12 @@ def track_cost(
         wrapper._last_usage = _last_usage
         wrapper._usage_history = _usage_history
 
-        original_getattr = wrapper.__getattribute__ if hasattr(wrapper, "__getattribute__") else None
+        wrapper.__getattribute__ if hasattr(wrapper, "__getattribute__") else None
 
         # Monkey-patch attribute access on the function
         wrapper.last_usage = None  # placeholder
 
-        def _get_last_usage() -> Optional[UsageRecord]:
+        def _get_last_usage() -> UsageRecord | None:
             return _last_usage[0]
 
         def _get_total_cost() -> Decimal:
@@ -222,6 +224,6 @@ def track_cost(
         wrapper.get_total_cost = _get_total_cost
         wrapper.usage_history = _usage_history
 
-        return wrapper  # type: ignore[return-value]
+        return wrapper  # type: ignore[no-any-return]
 
     return decorator

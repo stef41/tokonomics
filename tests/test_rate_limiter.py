@@ -3,19 +3,17 @@
 from __future__ import annotations
 
 import time
-from unittest.mock import patch
 
 import pytest
 
 from tokonomics.rate_limiter import (
     PROVIDER_DEFAULTS,
     RateLimitConfig,
-    RateLimitState,
     RateLimiter,
+    RateLimitState,
     create_limiter,
     format_rate_status,
 )
-
 
 # ── Config / State dataclasses ──────────────────────────────────────
 

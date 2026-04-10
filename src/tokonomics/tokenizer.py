@@ -6,7 +6,7 @@ Uses tiktoken when available, falls back to a simple word-based estimator.
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from tokonomics.models import get_model
 
@@ -43,7 +43,7 @@ def _get_tiktoken_encoding(model: str) -> Any:
         return None
 
     # Find the best encoding name
-    encoding_name: Optional[str] = None
+    encoding_name: str | None = None
     model_lower = model.lower()
     for prefix, enc in _ENCODING_MAP.items():
         if model_lower.startswith(prefix):
@@ -86,7 +86,7 @@ def count_tokens(text: str, model: str = "gpt-4o") -> int:
 
 
 def count_message_tokens(
-    messages: List[Dict[str, str]],
+    messages: list[dict[str, str]],
     model: str = "gpt-4o",
 ) -> int:
     """Count tokens for a list of chat messages (OpenAI format).

@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-import tempfile
 from decimal import Decimal
-from pathlib import Path
-
-import pytest
+from typing import TYPE_CHECKING
 
 from tokonomics.charts import export_svg_chart, format_bar_chart, format_table
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # Fixtures

@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import contextlib
 import time
-from dataclasses import dataclass, field
-from typing import Any, Dict, Optional
+from dataclasses import dataclass
 
 
 @dataclass
@@ -13,7 +13,7 @@ class RateLimitConfig:
 
     requests_per_minute: int
     tokens_per_minute: int
-    requests_per_day: Optional[int] = None
+    requests_per_day: int | None = None
     cooldown_seconds: float = 1.0
 
 
@@ -66,13 +66,7 @@ class RateLimiter:
         if self._tokens_used + tokens > self._config.tokens_per_minute:
             return False
 
-        if (
-            self._config.requests_per_day is not None
-            and self._daily_requests >= self._config.requests_per_day
-        ):
-            return False
-
-        return True
+        return not (self._config.requests_per_day is not None and self._daily_requests >= self._config.requests_per_day)
 
     def wait_time(self) -> float:
         """Seconds until the next request is expected to be allowed."""
@@ -134,7 +128,7 @@ class RateLimiter:
         self._daily_requests = 0
         self._cooldown_until = 0.0
 
-    def update_from_headers(self, headers: Dict[str, str]) -> None:
+    def update_from_headers(self, headers: dict[str, str]) -> None:
         """Update internal state from API response headers.
 
         Recognised headers (case-insensitive):
@@ -161,10 +155,8 @@ class RateLimiter:
                 pass
 
         if "retry-after" in lower:
-            try:
+            with contextlib.suppress(ValueError):
                 self._cooldown_until = time.time() + float(lower["retry-after"])
-            except ValueError:
-                pass
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -185,7 +177,7 @@ class RateLimiter:
 # Provider defaults
 # --------------------------------------------------------------------------
 
-PROVIDER_DEFAULTS: Dict[str, RateLimitConfig] = {
+PROVIDER_DEFAULTS: dict[str, RateLimitConfig] = {
     "openai": RateLimitConfig(
         requests_per_minute=500,
         tokens_per_minute=200_000,

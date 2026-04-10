@@ -7,7 +7,6 @@ pages. Last verified: April 2026.
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import Dict, List, Optional
 
 from tokonomics._types import ModelNotFoundError, ModelPricing, Provider
 
@@ -471,8 +470,8 @@ _ALL_MODELS: list[ModelPricing] = (
     + _COHERE_MODELS
 )
 
-MODEL_REGISTRY: Dict[str, ModelPricing] = {}
-_ALIAS_MAP: Dict[str, str] = {}
+MODEL_REGISTRY: dict[str, ModelPricing] = {}
+_ALIAS_MAP: dict[str, str] = {}
 
 for _model in _ALL_MODELS:
     MODEL_REGISTRY[_model.model_id] = _model
@@ -504,7 +503,7 @@ def get_model(model_id: str) -> ModelPricing:
         ) from None
 
 
-def list_models(provider: Optional[Provider] = None) -> List[ModelPricing]:
+def list_models(provider: Provider | None = None) -> list[ModelPricing]:
     """List all models, optionally filtered by provider."""
     models = list(MODEL_REGISTRY.values())
     if provider is not None:
@@ -512,7 +511,7 @@ def list_models(provider: Optional[Provider] = None) -> List[ModelPricing]:
     return sorted(models, key=lambda m: (m.provider.value, m.model_id))
 
 
-def find_models(query: str) -> List[ModelPricing]:
+def find_models(query: str) -> list[ModelPricing]:
     """Find models whose ID contains the query string (case-insensitive)."""
     q = query.lower()
     results: list[ModelPricing] = []
