@@ -22,6 +22,20 @@ from tokonomics.streaming import (
 )
 from tokonomics.tokenizer import count_message_tokens, count_tokens, fits_context
 from tokonomics.tracker import CostTracker, get_global_tracker, track_cost
+from tokonomics.rate_limiter import (
+    PROVIDER_DEFAULTS,
+    RateLimitConfig,
+    RateLimitState,
+    RateLimiter,
+    create_limiter,
+    format_rate_status,
+)
+from tokonomics.usage_report import (
+    UsageEntry,
+    UsageReport,
+    export_usage_json,
+    format_usage_report,
+)
 
 __version__ = "0.2.0"
 
@@ -68,4 +82,16 @@ __all__ = [
     "format_bar_chart",
     "export_svg_chart",
     "format_table",
+    # Usage reporting
+    "UsageEntry",
+    "UsageReport",
+    "format_usage_report",
+    "export_usage_json",
+    # Rate limiting
+    "RateLimitConfig",
+    "RateLimitState",
+    "RateLimiter",
+    "PROVIDER_DEFAULTS",
+    "create_limiter",
+    "format_rate_status",
 ]
