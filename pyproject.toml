@@ -1,0 +1,71 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tokonomics"
+version = "0.1.0"
+description = "Universal LLM token counting and cost management. Track, compare, and optimize your LLM API spending."
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.9"
+authors = [{ name = "Zacharie Bhatti" }]
+keywords = [
+    "llm",
+    "tokens",
+    "cost",
+    "pricing",
+    "openai",
+    "anthropic",
+    "gemini",
+    "budgeting",
+    "token-counting",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries",
+    "Typing :: Typed",
+]
+dependencies = []
+
+[project.optional-dependencies]
+tiktoken = ["tiktoken>=0.7"]
+cli = ["click>=8.0", "rich>=13.0"]
+all = ["tokonomics[tiktoken,cli]"]
+
+[project.scripts]
+tokonomics = "tokonomics.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/zbhatti/tokonomics"
+Repository = "https://github.com/zbhatti/tokonomics"
+Issues = "https://github.com/zbhatti/tokonomics/issues"
+Documentation = "https://github.com/zbhatti/tokonomics#readme"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tokonomics"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.ruff]
+target-version = "py39"
+line-length = 99
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "TCH"]
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
