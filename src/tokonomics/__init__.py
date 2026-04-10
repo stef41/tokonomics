@@ -37,7 +37,7 @@ from tokonomics.usage_report import (
     format_usage_report,
 )
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
     # Version
